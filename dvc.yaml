@@ -12,7 +12,7 @@ stages:
     deps:
     - src/feature_engineering.py
     - data/raw/train.csv
-    - data/raw/test.csv 
+    - data/raw/test.csv
     params:
     - feature_engineering.n_components
     outs:
@@ -47,7 +47,7 @@ stages:
     metrics:
     - metrics.json
 
-    
+
 # params:
 # - dvclive/params.yaml
 
@@ -58,4 +58,10 @@ stages:
 #      x: step 
 
 
-  
+params:
+- dvclive/params.yaml
+metrics:
+- dvclive/metrics.json
+plots:
+- dvclive/plots/metrics:
+    x: step

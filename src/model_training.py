@@ -11,7 +11,7 @@ with open('params.yaml','r')as file:
 
 n_estimators=params['model_training']['n_estimators']
 max_depth=params['model_training']['max_depth']
-boostrap=params['model_training']['bootstrap']
+boostrap=params['model_training']['boostrap']
 criterion=params['model_training']['creterion']
 
 # Load processed data

@@ -1,0 +1,94 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: 8d806c38652c7338c45c64b90be84b4a
+      size: 504
+    outs:
+    - path: data/raw/test.csv
+      hash: md5
+      md5: 7443713d68c4d3c19499b7eaba1c672d
+      size: 508
+    - path: data/raw/train.csv
+      hash: md5
+      md5: e3979e36262893c4bc47f559364f695e
+      size: 1866
+  feature_engineering:
+    cmd: python src/feature_engineering.py
+    deps:
+    - path: data/raw/test.csv
+      hash: md5
+      md5: 7443713d68c4d3c19499b7eaba1c672d
+      size: 508
+    - path: data/raw/train.csv
+      hash: md5
+      md5: e3979e36262893c4bc47f559364f695e
+      size: 1866
+    - path: src/feature_engineering.py
+      hash: md5
+      md5: 3559550c3de8ef6b8648f7b6c60bae95
+      size: 1348
+    params:
+      params.yaml:
+        feature_engineering.n_components: 3
+    outs:
+    - path: data/processed/test_processed.csv
+      hash: md5
+      md5: 94e91d27e178c3b77e4d79b800d26412
+      size: 1261
+    - path: data/processed/train_processed.csv
+      hash: md5
+      md5: 96df857c097c5596d7e3bf2db4d807c8
+      size: 4963
+  train_model:
+    cmd: python src/model_training.py
+    deps:
+    - path: data/processed/train_processed.csv
+      hash: md5
+      md5: 96df857c097c5596d7e3bf2db4d807c8
+      size: 4963
+    - path: src/model_training.py
+      hash: md5
+      md5: 96a7f724a8b3fd219c5abd81c6b9780d
+      size: 826
+    params:
+      params.yaml:
+        model_training.boostrap: true
+        model_training.creterion: entropy
+        model_training.max_depth: 5
+        model_training.n_estimators: 8
+    outs:
+    - path: model.pkl
+      hash: md5
+      md5: 2ed26f2908e8efe8fd5f7aff6c703095
+      size: 18364
+  evaluate_model:
+    cmd: python src/model_evaluation.py
+    deps:
+    - path: data/processed/test_processed.csv
+      hash: md5
+      md5: 94e91d27e178c3b77e4d79b800d26412
+      size: 1261
+    - path: model.pkl
+      hash: md5
+      md5: 2ed26f2908e8efe8fd5f7aff6c703095
+      size: 18364
+    - path: src/model_evaluation.py
+      hash: md5
+      md5: fc6bec9af66835fb23a6f8a3da9bd6f5
+      size: 1380
+    params:
+      params.yaml:
+        feature_engineering.n_components: 3
+        model_training.boostrap: true
+        model_training.creterion: entropy
+        model_training.max_depth: 5
+        model_training.n_estimators: 8
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: 263b1737d9c9e641da8581f8e58b13df
+      size: 121
